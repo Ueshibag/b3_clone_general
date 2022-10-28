@@ -1,0 +1,45 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+# Print the IP address
+_IP=$(hostname -I) || true
+if [ "$_IP" ]; then
+  printf "My IP address is %s\n" "$_IP"
+fi
+
+exec 2> /tmp/rc.local.log  # send stderr from rc.local to a log file
+exec 1>&2                  # send stdout to the same log file
+set -x                     # tell sh to display commands before execution
+
+export DISPLAY=:0
+export $(dbus-launch)
+
+# create a virtual MIDI port so that the RPI UP can send MIDI messages to setBfree
+modprobe snd-virmidi snd_index=1
+
+# start Jack, setBfree and all necessary stuff to perform MIDI connections
+su - pi /usr/bin/runb3
+
+# Raspberry Pi and Drawbars Control sync
+/usr/bin/python /home/pi/Documents/rpi_ready.py &
+
+# Raspberry Pi safe shutdown
+/usr/bin/python /home/pi/Documents/rpi_safe_shutdown.py &
+
+# start the RPI UP dashboard app
+su pi -c "DISPLAY=:0 /usr/bin/java -Djavafx.platform='eglfb' -jar /home/pi/Documents/com.b3.rpi.up.jar" &
+
+# enable IQAudio volume control with rotary encoder
+/usr/bin/IQ_rot &
+
+exit 0

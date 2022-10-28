@@ -1,0 +1,19 @@
+#!/bin/bash
+# stopB3
+
+/usr/bin/jack_disconnect 'a2j:kb_out (capture): MIDI out'  'setBfree:midi_in' &
+sleep 1
+#
+killall a2jmidid
+sleep 1
+#
+killall setBfree
+sleep 1
+#
+killall ttymidi
+sleep 1
+#
+killall jackd
+sleep 3
+#
+
