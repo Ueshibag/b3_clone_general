@@ -1,2 +1,2 @@
 # b3_clone_general
-General information (software flow)
+General information : software flows, startup scripts,...
