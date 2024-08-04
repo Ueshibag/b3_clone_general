@@ -1,0 +1,4 @@
+KERNEL=="ttyACM*", ATTRS{product}=="Arduino Nano Every", ATTRS{serial}=="C9ACB9635151363448202020FF180D3E", SYMLINK+="b3_keyboards"
+KERNEL=="ttyACM*", ATTRS{product}=="Arduino Nano Every", ATTRS{serial}=="3D4768A751514C4630202020FF0D4243", SYMLINK+="b3_drawbars"
+KERNEL=="ttyACM*", ATTRS{product}=="Arduino Nano Every", ATTRS{serial}=="45CF82F551514C4630202020FF0E2645", SYMLINK+="b3_controls"
+KERNEL=="ttyACM*", ATTRS{product}=="Arduino Leonardo", SYMLINK+="b3_pedals"

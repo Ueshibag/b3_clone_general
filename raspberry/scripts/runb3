@@ -1,0 +1,96 @@
+#!/bin/bash
+# runB3
+#
+export HOME="/home/pi"
+export DISPLAY=:0
+
+# Wait for the Arduino boards to be present
+counter=0
+while [ ! -e /dev/b3_keyboards ]; do
+    sleep 1s
+    counter=$((counter + 1))
+    if [ $counter -ge 10 ]; then
+        exit
+    fi
+done
+printf "/dev/b3_keyboards\tOK\n\n"
+
+counter=0
+while [ ! -e /dev/b3_pedals ]; do
+    sleep 1s
+    counter=$((counter + 1))
+    if [ $counter -ge 10 ]; then
+        exit
+    fi
+done
+printf "/dev/b3_pedals\t\tOK\n\n"
+
+counter=0
+while [ ! -e /dev/b3_controls ]; do
+    sleep 1s
+    counter=$((counter + 1))
+    if [ $counter -ge 10 ]; then
+        exit
+    fi
+done
+printf "/dev/b3_controls\tOK\n\n"
+
+counter=0
+while [ ! -e /dev/b3_drawbars ]; do
+    sleep 1s
+    counter=$((counter + 1))
+    if [ $counter -ge 10 ]; then
+        exit
+    fi
+done
+printf "/dev/b3_drawbars\tOK\n\n"
+
+sudo chmod 666 /dev/b3_keyboards
+sudo chmod 666 /dev/b3_pedals
+sudo chmod 666 /dev/b3_controls
+sudo chmod 666 /dev/b3_drawbars
+printf "/dev/b3_* chmod\t\tOK\n\n"
+
+# exit here if you have to upgrade Arduinos firmware
+# to setBfree and therefore unusable for firmware update.
+# do not forget to comment this out afterwards
+#exit 0
+#
+
+# ttymidi creates ALSA MIDI input and output ports
+# the PMK25H pedal board is controlled by an Arduino Leonardo
+# which enumerates natively as an ALSA MIDI device; no need for ttymidi for pedals
+/usr/local/bin/ttymidi -s /dev/b3_keyboards -n b3_alsa_midi_keyboards -v &
+/usr/local/bin/ttymidi -s /dev/b3_controls -n b3_alsa_midi_controls -v &
+/usr/local/bin/ttymidi -s /dev/b3_drawbars -n b3_alsa_midi_drawbars -v &
+sleep 2s
+printf "ttymidi\t\t\tOK\n\n"
+
+# start the B3 emulator
+/usr/bin/pw-jack /opt/setBfree/bin/setBfree &
+sleep 2s
+printf "pw-jack setBfree\tOK\n\n"
+
+# Arduinos to setBfree connections are done by loading a patchbay config file
+/usr/bin/qpwgraph --activated /home/pi/b3_clone/rpi/b3.qpwgraph &
+sleep 2s
+printf "qpwgraph\t\tOK\n\n"
+
+# start the Raspberry PI UP dashboard app
+/home/pi/.venv/bin/python /home/pi/b3_clone/rpi/b3_up_py/b3_up_gui.py &
+sleep 2s
+printf "Python dashboard\tOK\n\n"
+
+# initialize drawbars and controls Arduinos
+stty 115200 -F /dev/b3_drawbars
+printf "D\n" > /dev/b3_drawbars
+sleep 1s
+stty 115200 -F /dev/b3_controls
+printf "C\n" > /dev/b3_controls
+sleep 1s
+printf "Drawbars and Controls Arduinos initialized OK\n\n"
+
+
+# Ready !
+exit 0
+

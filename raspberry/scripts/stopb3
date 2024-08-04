@@ -1,0 +1,21 @@
+#!/bin/bash
+# stopb3
+
+killall setBfree
+sleep 1s
+
+killall pipewire
+sleep 1s
+
+killall ttymidi
+sleep 1s
+
+killall qpwgraph
+sleep 1s
+
+killall python
+sleep 1s
+
+exit 0
+
+
