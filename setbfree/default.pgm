@@ -59,10 +59,10 @@
 40 {name="Overdrive OFF",    overdrive=off}
 41 {name="Overdrive ON",     overdrive=on}
 42 {name="Vibrato V1",       vibrato=v1}
-43 {name="Vibrato V2",       vibrato=v2}
-44 {name="Vibrato V3",       vibrato=v3}
-45 {name="Vibrato C1",       vibrato=c1}
-46 {name="Vibrato C2",       vibrato=c2}
+43 {name="Vibrato C1",       vibrato=c1}
+44 {name="Vibrato V2",       vibrato=v2}
+45 {name="Vibrato C2",       vibrato=c2}
+46 {name="Vibrato V3",       vibrato=v3}
 47 {name="Vibrato C3",       vibrato=c3}
 48 {name="Vib lower on",     vibratolower=on}
 49 {name="Vib lower off",    vibratolower=off}
